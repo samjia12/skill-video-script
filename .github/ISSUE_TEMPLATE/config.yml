@@ -4,5 +4,8 @@ contact_links:
     url: https://github.com/samjia12/skill-video-script#readme
     about: README, examples, and FAQ before filing an issue.
   - name: Intro post for marketers / 营销介绍博文
-    url: https://github.com/samjia12/skill-video-script/blob/main/docs/blog/intro-for-marketers.zh-CN.md
-    about: Use cases and benefits (Chinese). English: docs/blog/intro-for-marketers.md
+    url: https://github.com/samjia12/skill-video-script/blob/main/docs/blog/launch-for-marketers.zh-CN.md
+    about: Launch note with hours and scenarios. English: docs/blog/launch-for-marketers.md
+  - name: Architecture diagrams / 架构图
+    url: https://github.com/samjia12/skill-video-script/blob/main/docs/architecture.md
+    about: Flowcharts and sequence diagram of the pipeline.

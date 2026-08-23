@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>skill-video-script demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root, [data-theme="dark"] {
+      --bg: #12141a; --bg2: #1b1f2a; --ink: #f4f1ea; --muted: #9aa3b5;
+      --line: #2c3344; --accent: #ffe500; --accent2: #7dd3fc; --danger: #fb7185;
+      --ok: #4ade80; --shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    [data-theme="light"] {
+      --bg: #f6f3ec; --bg2: #ffffff; --ink: #1a1d26; --muted: #5c6577;
+      --line: #e4dfd4; --accent: #c9a227; --accent2: #0369a1; --danger: #be123c;
+      --ok: #15803d; --shadow: 0 12px 32px rgba(26,29,38,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink);
+      font: 15px/1.55 "PingFang SC", "Hiragino Sans GB", "Segoe UI", sans-serif; }
+    header {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 22px; border-bottom: 1px solid var(--line); background: var(--bg2);
+      position: sticky; top: 0; z-index: 5;
+    }
+    .brand { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+    .brand h1 { font-size: 18px; margin: 0; letter-spacing: .02em; }
+    .brand span { color: var(--muted); font-size: 13px; }
+    button, .chip {
+      border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+      border-radius: 999px; padding: 8px 14px; cursor: pointer; font: inherit;
+    }
+    button.primary { background: var(--accent); color: #111; border-color: transparent; font-weight: 650; }
+    button.ghost:hover, .chip:hover { border-color: var(--accent); }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    main {
+      display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 20px;
+      padding: 20px; max-width: 1280px; margin: 0 auto;
+    }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+    .panel { background: var(--bg2); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+    label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+    input, select, textarea {
+      width: 100%; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--line);
+      background: var(--bg); color: var(--ink); font: inherit;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .err { color: var(--danger); font-size: 13px; min-height: 1.2em; margin-top: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tab { border-radius: 10px; }
+    .tab.active { background: var(--accent); color: #111; border-color: transparent; }
+    pre {
+      white-space: pre-wrap; background: var(--bg); border: 1px solid var(--line);
+      border-radius: 12px; padding: 14px; font-size: 13px; max-height: 420px; overflow: auto;
+    }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    @media (max-width: 700px) { .charts { grid-template-columns: 1fr; } }
+    .chart-card { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 10px 6px; }
+    .chart-card h3 { margin: 0 0 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+    canvas { width: 100% !important; max-height: 260px; }
+    footer { text-align: center; color: var(--muted); font-size: 12px; padding: 8px 16px 24px; }
+    .toast { position: fixed; bottom: 18px; right: 18px; background: var(--ok); color: #052e16;
+      padding: 8px 12px; border-radius: 10px; display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>skill-video-script</h1>
+      <span>browser demo of the 3-style short-video pipeline</span>
+    </div>
+    <button id="themeBtn" type="button" class="ghost" aria-pressed="false">Light mode</button>
+  </header>
+  <main>
+    <section class="panel" aria-label="input">
+      <strong>Product brief</strong>
+      <div class="chips" id="exampleChips"></div>
+      <label for="name">Product name *</label>
+      <input id="name" maxlength="80" placeholder="清润防晒霜" />
+      <label for="platform">Platform *</label>
+      <select id="platform">
+        <option value="douyin">抖音 Douyin</option>
+        <option value="wechat">视频号 WeChat Channels</option>
+        <option value="bilibili">B站 Bilibili</option>
+      </select>
+      <label for="points">Selling points * (comma or newline)</label>
+      <textarea id="points" placeholder="清爽不黏腻, SPF50+"></textarea>
+      <label for="audience">Audience</label>
+      <input id="audience" maxlength="80" />
+      <label for="category">Category</label>
+      <input id="category" maxlength="40" />
+      <label for="price">Price</label>
+      <input id="price" maxlength="30" />
+      <label for="duration">Duration seconds (optional)</label>
+      <input id="duration" type="number" min="8" max="180" />
+      <div class="row">
+        <button id="genBtn" class="primary" type="button">Generate 3 scripts</button>
+        <button id="resetBtn" class="ghost" type="button">Reset</button>
+      </div>
+      <div class="err" id="err" role="alert"></div>
+    </section>
+    <section class="panel" aria-label="output">
+      <div class="toolbar">
+        <div class="tabs" id="tabs"></div>
+        <button id="copyBtn" class="ghost" type="button" disabled>Copy Markdown</button>
+      </div>
+      <pre id="out">Fill a brief or pick an example, then generate.</pre>
+      <div class="charts">
+        <div class="chart-card">
+          <h3>Style radar (hook / info / trust / fun / CTA)</h3>
+          <canvas id="radar" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Shot duration bars + cumulative line</h3>
+          <canvas id="combo" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>Client-side simulation of the Python template engine. Charts: Chart.js 4 via jsDelivr. No API key.</footer>
+  <div class="toast" id="toast">Copied.</div>
+
+  <script>
+    const EXAMPLES = [
+      {
+        label: "Douyin sunscreen",
+        name: "清润防晒霜", platform: "douyin",
+        points: "清爽不黏腻,SPF50+,学生党价格",
+        audience: "通勤学生和上班族", category: "美妆防晒", price: "79元", duration: 27
+      },
+      {
+        label: "Channels coffee",
+        name: "便携胶囊咖啡机", platform: "wechat",
+        points: "30秒出杯,占地只有一本杂志,胶囊兼容多口味",
+        audience: "租房党和远程办公的人", category: "小家电", price: "299元", duration: 36
+      },
+      {
+        label: "Bilibili keyboard",
+        name: "星核机械键盘套件", platform: "bilibili",
+        points: "热插拔,卫星轴不晃,空格不响",
+        audience: "客制化入门党", category: "外设", price: "499元", duration: 60
+      }
+    ];
+
+    const PLATFORMS = {
+      douyin: { id: "douyin", label: "抖音", min: 15, max: 45, def: 27, shots: 7, cps: 4.8, tags: ["种草", "日常"] },
+      wechat: { id: "wechat", label: "视频号", min: 20, max: 60, def: 36, shots: 8, cps: 4.0, tags: ["真实分享"] },
+      bilibili: { id: "bilibili", label: "B站", min: 30, max: 180, def: 60, shots: 9, cps: 3.6, tags: ["开箱", "测评"] }
+    };
+
+    const STYLES = [
+      { id: "grass", label: "种草安利", roles: ["hook","pain","reveal","closeup","proof","lifestyle","cta"],
+        scores: [9, 5, 6, 8, 7],
+        hook: "停！{point}。" },
+      { id: "howto", label: "干货教程", roles: ["hook","promise","tip1","tip2","tip3","recap","cta"],
+        scores: [6, 9, 8, 4, 6],
+        hook: "收藏：{point}三步。" },
+      { id: "story", label: "剧情反转", roles: ["hook","setup","conflict","twist","solution","result","cta"],
+        scores: [8, 5, 5, 9, 7],
+        hook: "差点退了。" }
+    ];
+
+    const VO = {
+      pain: "以前用普通{category}，最崩的就是做不到{point}。",
+      reveal: "直到换上{name}，{point}这件事终于不用硬撑。",
+      closeup: "细节给你们看：质感、上手、{point}。",
+      proof: "连续用下来，{points}都站得住。",
+      lifestyle: "现在它就待在我每天伸手就能够到的地方。",
+      promise: "看完带走三件事：怎么选、怎么用、怎么避开错法。",
+      tip1: "第一步，把{name}放对场景，{point}才出得来。",
+      tip2: "第二步，抓住{points}里最关键的那个点。",
+      tip3: "第三步，用完做一次 10 秒复盘。",
+      recap: "复习：场景、动作、复盘。{name}不是玄学。",
+      setup: "故事要从我第一次遇见{name}说起。",
+      conflict: "结果第一天就翻车，我差点判死刑。",
+      twist: "转机来得很没礼貌：按对方法再用一次。",
+      solution: "{name}的解法写在{points}上。",
+      result: "从翻车到真香，中间只隔一次正确体验。",
+      detail: "再补一个细节：{point}在真实场景里更明显。",
+      demo: "完整演示一遍，动作放慢，可以暂停跟做。",
+      cta: "需要的话我把清单留评论区。觉得有用就留下。"
+    };
+
+    function fill(t, s) {
+      return t.replace(/\{(\w+)\}/g, (_, k) => s[k] != null ? s[k] : "");
+    }
+    function crc(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      return h;
+    }
+    function round2(n) { return Math.round(n * 100) / 100; }
+    function trimChars(text, max) {
+      if (text.length <= max) return text;
+      const chunk = text.slice(0, max);
+      const m = chunk.match(/[。！？!?；;]/g);
+      if (m) {
+        const idx = Math.max(chunk.lastIndexOf("。"), chunk.lastIndexOf("！"), chunk.lastIndexOf("？"));
+        if (idx >= 3) return chunk.slice(0, idx + 1);
+      }
+      return chunk.replace(/[的了着把被用一这那]+$/, "").trim();
+    }
+    function allocate(duration, n, hookSec) {
+      const hook = Math.min(hookSec, round2(duration * 0.22), duration - 2);
+      const cta = round2(Math.min(5, Math.max(2.5, duration * 0.12)));
+      const midN = n - 2;
+      let middle = round2(duration - hook - cta);
+      const base = round2(middle / midN);
+      const spans = [round2(Math.max(2, hook))].concat(Array(midN).fill(base)).concat([cta]);
+      const diff = round2(duration - spans.reduce((a, b) => a + b, 0));
+      spans[spans.length - 2] = round2(spans[spans.length - 2] + diff);
+      const times = [];
+      let t = 0;
+      spans.forEach((s) => { times.push([round2(t), round2(t + s)]); t = round2(t + s); });
+      times[times.length - 1][1] = duration;
+      return times;
+    }
+    function stretchRoles(base, n) {
+      const roles = base.slice();
+      const extras = ["detail", "demo", "reaction", "compare"];
+      let i = 0;
+      while (roles.length < n) {
+        roles.splice(roles.length - 1, 0, extras[i % extras.length]);
+        i += 1;
+      }
+      while (roles.length > n && roles.length > 3) roles.splice(roles.length - 2, 1);
+      roles[0] = "hook";
+      roles[roles.length - 1] = "cta";
+      return roles;
+    }
+
+    function generate(brief) {
+      const plat = PLATFORMS[brief.platform];
+      if (!plat) throw new Error("unsupported platform");
+      if (!brief.name || !brief.points.length) throw new Error("product name and selling points are required");
+      let duration = brief.duration == null || brief.duration === "" ? plat.def : Number(brief.duration);
+      if (!Number.isInteger(duration) || duration < 8 || duration > 180) throw new Error("duration must be an integer 8–180");
+      const warnings = [];
+      if (duration < plat.min) { warnings.push("duration clamped to " + plat.min + "s"); duration = plat.min; }
+      if (duration > plat.max) { warnings.push("duration clamped to " + plat.max + "s"); duration = plat.max; }
+      const slots = {
+        name: brief.name,
+        point: brief.points[0],
+        points: brief.points.slice(0, 3).join("、"),
+        audience: brief.audience || "普通人",
+        price: brief.price || "这个价位",
+        category: brief.category || "好物"
+      };
+      const versions = STYLES.map((style) => {
+        const roles = stretchRoles(style.roles, plat.shots);
+        const timeline = allocate(duration, roles.length, 3);
+        const hookSpoken = trimChars(fill(style.hook, slots), Math.max(12, Math.floor(3 * plat.cps * 1.35)));
+        const shots = roles.map((role, i) => {
+          const [start, end] = timeline[i];
+          const dur = round2(end - start);
+          const spoken = role === "hook" ? hookSpoken : trimChars(fill(VO[role] || VO.detail, slots), Math.max(8, Math.floor(dur * plat.cps)));
+          return { index: i + 1, start, end, role, spoken };
+        });
+        const tags = ["#" + brief.name.replace(/\s+/g, "")].concat(
+          brief.category ? ["#" + brief.category] : [],
+          ["#" + brief.points[0].replace(/\s+/g, "")],
+          plat.tags.map((t) => "#" + t)
+        ).slice(0, plat.id === "wechat" ? 4 : 6);
+        const mdLines = [
+          "## 版本 · " + style.label + " (`" + style.id + "`)",
+          "- **时长：** " + duration + "s",
+          "- **黄金 3 秒：** " + hookSpoken,
+          "- **话题：** " + tags.join(" "),
+          "",
+          "| # | 时间 | 角色 | 口播 |",
+          "| --- | --- | --- | --- |"
+        ];
+        shots.forEach((s) => {
+          mdLines.push("| " + s.index + " | " + s.start.toFixed(1) + "–" + s.end.toFixed(1) + "s | " + s.role + " | " + s.spoken + " |");
+        });
+        mdLines.push("", "### 口播稿", "```");
+        shots.forEach((s) => mdLines.push("[" + s.start.toFixed(1) + "-" + s.end.toFixed(1) + "] " + s.spoken));
+        mdLines.push("```");
+        return {
+          style, duration, hookSpoken, shots, tags, scores: style.scores,
+          markdown: mdLines.join("\n")
+        };
+      });
+      const header = [
+        "# " + brief.name + " · " + plat.label + " 短视频脚本",
+        warnings.length ? "> Warnings: " + warnings.join("; ") : "",
+        "共 3 个风格版本：种草安利、干货教程、剧情反转。",
+        ""
+      ].filter(Boolean);
+      return { plat, duration, warnings, versions, markdown: header.concat(versions.map((v) => v.markdown)).join("\n\n") };
+    }
+
+    /* UI */
+    const $ = (id) => document.getElementById(id);
+    let last = null;
+    let activeTab = 0;
+    let radarChart = null;
+    let comboChart = null;
+
+    function readBrief() {
+      const points = $("points").value.split(/[,，\n;；]+/).map((s) => s.trim()).filter(Boolean);
+      const durRaw = $("duration").value;
+      return {
+        name: $("name").value.trim(),
+        platform: $("platform").value,
+        points,
+        audience: $("audience").value.trim(),
+        category: $("category").value.trim(),
+        price: $("price").value.trim(),
+        duration: durRaw === "" ? null : Number(durRaw)
+      };
+    }
+    function fillExample(ex) {
+      $("name").value = ex.name;
+      $("platform").value = ex.platform;
+      $("points").value = ex.points;
+      $("audience").value = ex.audience;
+      $("category").value = ex.category;
+      $("price").value = ex.price;
+      $("duration").value = ex.duration;
+      $("err").textContent = "";
+    }
+    function renderTabs(result) {
+      $("tabs").innerHTML = "";
+      result.versions.forEach((v, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "tab" + (i === activeTab ? " active" : "");
+        b.textContent = v.style.label;
+        b.addEventListener("click", () => { activeTab = i; show(); });
+        $("tabs").appendChild(b);
+      });
+    }
+    function chartColors() {
+      const dark = document.documentElement.getAttribute("data-theme") !== "light";
+      return {
+        ink: dark ? "#f4f1ea" : "#1a1d26",
+        grid: dark ? "#2c3344" : "#e4dfd4",
+        a: dark ? "#ffe500" : "#c9a227",
+        b: dark ? "#7dd3fc" : "#0369a1",
+        c: dark ? "#fb7185" : "#be123c"
+      };
+    }
+    function paintCharts(result) {
+      if (typeof Chart === "undefined") return;
+      const c = chartColors();
+      const labels = ["Hook", "Info", "Trust", "Fun", "CTA"];
+      const datasets = result.versions.map((v, i) => ({
+        label: v.style.label,
+        data: v.scores,
+        borderColor: [c.a, c.b, c.c][i],
+        backgroundColor: [c.a, c.b, c.c][i] + "33"
+      }));
+      if (radarChart) radarChart.destroy();
+      radarChart = new Chart($("radar"), {
+        type: "radar",
+        data: { labels, datasets },
+        options: {
+          plugins: { legend: { labels: { color: c.ink } } },
+          scales: { r: { min: 0, max: 10, ticks: { display: false },
+            grid: { color: c.grid }, angleLines: { color: c.grid }, pointLabels: { color: c.ink } } }
+        }
+      });
+      const v = result.versions[activeTab];
+      const shotLabels = v.shots.map((s) => s.index + " " + s.role);
+      const durs = v.shots.map((s) => round2(s.end - s.start));
+      let acc = 0;
+      const cum = durs.map((d) => { acc = round2(acc + d); return acc; });
+      if (comboChart) comboChart.destroy();
+      comboChart = new Chart($("combo"), {
+        data: {
+          labels: shotLabels,
+          datasets: [
+            { type: "bar", label: "Shot seconds", data: durs, backgroundColor: c.a + "cc", yAxisID: "y" },
+            { type: "line", label: "Cumulative s", data: cum, borderColor: c.b, tension: 0.2, yAxisID: "y" }
+          ]
+        },
+        options: {
+          plugins: { legend: { labels: { color: c.ink } } },
+          scales: {
+            x: { ticks: { color: c.ink, maxRotation: 50 }, grid: { color: c.grid } },
+            y: { ticks: { color: c.ink }, grid: { color: c.grid } }
+          }
+        }
+      });
+    }
+    function show() {
+      if (!last) return;
+      renderTabs(last);
+      $("out").textContent = last.versions[activeTab].markdown;
+      $("copyBtn").disabled = false;
+      paintCharts(last);
+    }
+    function onGenerate() {
+      $("err").textContent = "";
+      try {
+        last = generate(readBrief());
+        activeTab = 0;
+        show();
+      } catch (e) {
+        last = null;
+        $("copyBtn").disabled = true;
+        $("out").textContent = "Fill a brief or pick an example, then generate.";
+        $("err").textContent = e.message || String(e);
+      }
+    }
+
+    EXAMPLES.forEach((ex) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "chip";
+      b.textContent = ex.label;
+      b.addEventListener("click", () => { fillExample(ex); onGenerate(); });
+      $("exampleChips").appendChild(b);
+    });
+    $("genBtn").addEventListener("click", onGenerate);
+    $("resetBtn").addEventListener("click", () => {
+      ["name","points","audience","category","price","duration"].forEach((id) => { $(id).value = ""; });
+      $("platform").value = "douyin";
+      $("err").textContent = "";
+      last = null;
+      $("copyBtn").disabled = true;
+      $("out").textContent = "Fill a brief or pick an example, then generate.";
+      $("tabs").innerHTML = "";
+      if (radarChart) { radarChart.destroy(); radarChart = null; }
+      if (comboChart) { comboChart.destroy(); comboChart = null; }
+    });
+    $("copyBtn").addEventListener("click", async () => {
+      if (!last) return;
+      const text = last.versions[activeTab].markdown;
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (_) {
+        const ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); ta.remove();
+      }
+      const t = $("toast");
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 1200);
+    });
+    $("themeBtn").addEventListener("click", () => {
+      const html = document.documentElement;
+      const next = html.getAttribute("data-theme") === "light" ? "dark" : "light";
+      html.setAttribute("data-theme", next);
+      $("themeBtn").textContent = next === "light" ? "Dark mode" : "Light mode";
+      $("themeBtn").setAttribute("aria-pressed", next === "light" ? "true" : "false");
+      if (last) paintCharts(last);
+    });
+    const params = new URLSearchParams(location.search);
+    const exIdx = Number(params.get("example"));
+    if (!Number.isNaN(exIdx) && EXAMPLES[exIdx]) {
+      fillExample(EXAMPLES[exIdx]);
+      onGenerate();
+    }
+    if (params.get("theme") === "light") $("themeBtn").click();
+  </script>
+</body>
+</html>

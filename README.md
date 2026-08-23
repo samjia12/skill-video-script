@@ -1,5 +1,19 @@
 # skill-video-script
 
+```
+┌──────────────────────────────────────┐
+│  ▌ skill-video-script                │
+│    3 styles · 3 platforms            │
+│    hook · storyboard · voiceover     │
+└──────────────────────────────────────┘
+```
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-c9a227.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-0369a1.svg)](https://www.python.org/downloads/)
+[![Release](https://img.shields.io/github/v/release/samjia12/skill-video-script)](https://github.com/samjia12/skill-video-script/releases/tag/v0.1.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/samjia12/skill-video-script/blob/main/.github/PULL_REQUEST_TEMPLATE.md)
+[![Issues](https://img.shields.io/badge/issues-bug%20%7C%20feature%20%7C%20question-7dd3fc.svg)](https://github.com/samjia12/skill-video-script/issues/new/choose)
+
 Generate **three distinct short-video scripts** from a product brief and a target platform (Douyin, WeChat Channels, or Bilibili). Every variant includes a storyboard, a timed voiceover, a golden 3-second opening, BGM guidance, and subtitle notes.
 
 This repository is both:
@@ -8,9 +22,10 @@ This repository is both:
 - a **standalone Python CLI / library** that runs offline with the standard library.
 
 [中文文档](README.zh-CN.md) ·
-[营销介绍博文](docs/blog/intro-for-marketers.zh-CN.md) ·
-[Intro for marketers](docs/blog/intro-for-marketers.md) ·
-[Release notes v0.1.0](docs/releases/v0.1.0.md)
+[Architecture](docs/architecture.md) ·
+[Live demo](demo/index.html) ·
+[Launch post](docs/blog/launch-for-marketers.md) ·
+[Release v0.1.0](docs/releases/v0.1.0.md)
 
 ## Features
 
@@ -254,7 +269,22 @@ Point the agent at `SKILL.md`. The skill tells the agent to collect a brief, run
 5. Do not commit API keys. Do not add pirated music titles to `copy_bank.py`.
 6. Open a PR with the [pull request template](.github/PULL_REQUEST_TEMPLATE.md): summary, test output, and any new example JSON. Bugs / features / how-to questions use the [issue templates](.github/ISSUE_TEMPLATE/).
 
-Design notes for the original three implementation options live in [`DESIGN.md`](DESIGN.md).
+Design notes for the original three implementation options live in [`DESIGN.md`](DESIGN.md). Sample charts: `PYTHONPATH=src python3 scripts/generate_report.py` (needs `matplotlib`).
+
+## Docs and extras
+
+| Path | What |
+| --- | --- |
+| [docs/architecture.md](docs/architecture.md) | System flowchart, sequence diagram, processing flow (Mermaid) |
+| [demo/index.html](demo/index.html) | Zero-install browser demo (Chart.js radar + shot bars) |
+| [examples/report-sample/report-sample.md](examples/report-sample/report-sample.md) | Marketing packet with 5 matplotlib figures |
+| [docs/blog/launch-for-marketers.md](docs/blog/launch-for-marketers.md) | English launch post for operators |
+| [docs/blog/launch-for-marketers.zh-CN.md](docs/blog/launch-for-marketers.zh-CN.md) | 中文发布说明 |
+| [docs/blog/intro-for-marketers.md](docs/blog/intro-for-marketers.md) | Shorter intro (EN) |
+| [docs/releases/v0.1.0.md](docs/releases/v0.1.0.md) | Release notes + roadmap Gantt |
+| [docs/social/launch-kit.md](docs/social/launch-kit.md) | X / 小红书 / LinkedIn copy |
+| [.github/ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE/) | Bug, feature, and usage YAML forms |
+| [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) | PR checklist |
 
 ## License
 

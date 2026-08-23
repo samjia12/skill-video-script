@@ -1,3 +1,5 @@
 # Runtime uses the Python standard library only (3.9+).
 # Install test tools so contributors can run the suite after clone:
 pytest>=7.4.0,<9
+# Optional charts for examples/report-sample (pip install matplotlib):
+# matplotlib>=3.7

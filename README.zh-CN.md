@@ -1,5 +1,19 @@
 # skill-video-script
 
+```
+┌──────────────────────────────────────┐
+│  ▌ skill-video-script                │
+│    3 styles · 3 platforms            │
+│    hook · storyboard · voiceover     │
+└──────────────────────────────────────┘
+```
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-c9a227.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-0369a1.svg)](https://www.python.org/downloads/)
+[![Release](https://img.shields.io/github/v/release/samjia12/skill-video-script)](https://github.com/samjia12/skill-video-script/releases/tag/v0.1.0)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/samjia12/skill-video-script/blob/main/.github/PULL_REQUEST_TEMPLATE.md)
+[![Issues](https://img.shields.io/badge/issues-bug%20%7C%20feature%20%7C%20question-7dd3fc.svg)](https://github.com/samjia12/skill-video-script/issues/new/choose)
+
 根据产品信息和目标平台（抖音 / 视频号 / B 站），一次生成 **3 个不同风格** 的短视频脚本。每一版都包含分镜表、口播稿、黄金 3 秒开头、BGM 建议和字幕建议。
 
 本仓库同时是：
@@ -8,9 +22,10 @@
 - 可离线运行的 **Python CLI / 库**（运行时仅标准库）
 
 [English README](README.md) ·
-[营销介绍博文](docs/blog/intro-for-marketers.zh-CN.md) ·
-[Intro for marketers](docs/blog/intro-for-marketers.md) ·
-[Release notes v0.1.0](docs/releases/v0.1.0.md)
+[架构图](docs/architecture.md) ·
+[浏览器 Demo](demo/index.html) ·
+[发布说明](docs/blog/launch-for-marketers.zh-CN.md) ·
+[Release v0.1.0](docs/releases/v0.1.0.md)
 
 ## 功能特性
 
@@ -253,7 +268,22 @@ CLI 参数：
 5. 不要提交 API Key；不要往 `copy_bank.py` 里写盗版曲名。
 6. PR 请使用 [pull request 模板](.github/PULL_REQUEST_TEMPLATE.md)，附变更说明、测试输出；新示例请带 JSON。Bug / 新功能 / 使用疑问走 [Issue 模板](.github/ISSUE_TEMPLATE/)。
 
-三套实现方案的对比见 [`DESIGN.md`](DESIGN.md)。
+三套实现方案的对比见 [`DESIGN.md`](DESIGN.md)。样例图表：`PYTHONPATH=src python3 scripts/generate_report.py`（需要 `matplotlib`）。
+
+## 文档与附加目录
+
+| 路径 | 说明 |
+| --- | --- |
+| [docs/architecture.md](docs/architecture.md) | 系统架构 / 时序 / 数据处理（Mermaid） |
+| [demo/index.html](demo/index.html) | 零安装浏览器 Demo（雷达图 + 分镜柱状/折线） |
+| [examples/report-sample/report-sample.md](examples/report-sample/report-sample.md) | 给营销团队的样例分析报告（5 张图） |
+| [docs/blog/launch-for-marketers.zh-CN.md](docs/blog/launch-for-marketers.zh-CN.md) | 面向运营的发布长文 |
+| [docs/blog/launch-for-marketers.md](docs/blog/launch-for-marketers.md) | English launch post |
+| [docs/blog/intro-for-marketers.zh-CN.md](docs/blog/intro-for-marketers.zh-CN.md) | 较短介绍博文 |
+| [docs/releases/v0.1.0.md](docs/releases/v0.1.0.md) | Release Notes + Roadmap Gantt |
+| [docs/social/launch-kit.md](docs/social/launch-kit.md) | X / 小红书 / LinkedIn 文案 |
+| [.github/ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE/) | Bug / 功能 / 使用问题 YAML 表单 |
+| [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) | PR 清单 |
 
 ## 许可证
 

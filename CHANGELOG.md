@@ -19,7 +19,8 @@ First public release.
 - Markdown and JSON renderers, atomic file output, and permission-aware IO.
 - Unit tests for every core function plus eight boundary classes (empty, oversized, illegal format, network, rate limit, concurrency, special characters, access denied).
 - Bilingual README, MIT license, and three runnable examples.
-- Marketer intro posts (`docs/blog/`) and GitHub issue / pull request templates.
+- Marketer intro and launch posts (`docs/blog/`) and GitHub issue / pull request templates.
+- Architecture diagrams (`docs/architecture.md`), browser demo (`demo/index.html`), matplotlib sample report (`examples/report-sample/`), and social copy (`docs/social/launch-kit.md`).
 
 ### Security
 

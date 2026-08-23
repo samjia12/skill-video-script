@@ -7,7 +7,10 @@
 - 可被 Agent 加载的 **Skill**（`SKILL.md`）
 - 可离线运行的 **Python CLI / 库**（运行时仅标准库）
 
-[English README](README.md)
+[English README](README.md) ·
+[营销介绍博文](docs/blog/intro-for-marketers.zh-CN.md) ·
+[Intro for marketers](docs/blog/intro-for-marketers.md) ·
+[Release notes v0.1.0](docs/releases/v0.1.0.md)
 
 ## 功能特性
 
@@ -59,9 +62,10 @@ python3 scripts/generate_script.py examples/wechat_coffee.json -o output/coffee.
 python3 scripts/generate_script.py examples/bilibili_keyboard.json --format json
 ```
 
-库调用：
+库调用（未执行 `pip install -e .` 时需要 `PYTHONPATH=src`）：
 
-```python
+```bash
+PYTHONPATH=src python3 - <<'PY'
 from video_script import generate, parse_brief, render_markdown
 
 brief = parse_brief({
@@ -70,7 +74,10 @@ brief = parse_brief({
     "selling_points": ["清爽不黏腻", "SPF50+"],
 })
 print(render_markdown(generate(brief)))
+PY
 ```
+
+`scripts/generate_script.py` 和 `examples/` 里的脚本已经把 `src/` 加进 `sys.path`。
 
 ## 使用示例
 
@@ -89,6 +96,7 @@ print(render_markdown(generate(brief)))
   "audience": "通勤学生和上班族",
   "price": "79元",
   "brand": "晴川",
+  "description": "出门前30秒涂完，通勤也不花脸。",
   "duration_sec": 27
 }
 ```
@@ -199,7 +207,7 @@ CLI 参数：
 | 参数 | 说明 |
 | --- | --- |
 | `--name` / `--platform` / `--points` | 不写 JSON 时的产品字段 |
-| `--audience` `--category` `--price` `--brand` `--description` `--duration` | 可选 |
+| `--audience` `--category` `--price` `--brand` `--description` `--duration` `--language` | 可选（`--language` 只写入 brief，口播仍是中文） |
 | `--backend template\|llm` | 默认 `template`（离线） |
 | `--format md\|json\|both` | 默认 `md` |
 | `-o` / `--output` | 输出文件（自动建目录） |
@@ -219,13 +227,16 @@ CLI 参数：
 抖音、视频号、B 站的内容场就是中文。Markdown 的章节名也保持中文，方便剪辑同学直接粘贴。
 
 **能加 TikTok / Shorts / Reels 吗？**
-1.0.0 不做。音乐授权和 CTA 表面都不一样。请开 issue，或扩展 `platforms.py` 与 `copy_bank.py`。
+0.1.0 不做。音乐授权和 CTA 表面都不一样。别名 `tiktok` 目前走的是**抖音** playbook。请开 issue，或扩展 `platforms.py` 与 `copy_bank.py`。
 
 **会不会推荐一首有版权的热歌？**
 不会。BGM 只输出情绪、BPM、类型和 **曲库搜索词**。
 
 **黄金 3 秒看起来被截断了？**
-引擎按平台口播字速卡字数，保证主播能在 3 秒内读完。产品名很长时请缩短名称，或把完整卖点放到后续分镜。
+引擎会优先选一句能在约 3 秒内读完的**完整短句**。产品名很长时，名称会出现在后续分镜，而不一定出现在开头。
+
+**`--language en` 会把口播改成英文吗？**
+不会。该字段只写在 brief 上。口播仍是中文。英文口播见 [0.1.0 Roadmap](docs/releases/v0.1.0.md)。
 
 **怎样给 Agent 用？**
 让 Agent 读取 `SKILL.md`。Skill 要求先收齐 brief，再跑 `scripts/generate_script.py`，并按固定顺序展示 3 个版本。
@@ -240,7 +251,7 @@ CLI 参数：
 3. 改行为就近补测试（`tests/`）。
 4. 提交前运行 `python3 -m pytest tests`。
 5. 不要提交 API Key；不要往 `copy_bank.py` 里写盗版曲名。
-6. PR 请附变更说明、测试输出、如有新示例请带 JSON。
+6. PR 请使用 [pull request 模板](.github/PULL_REQUEST_TEMPLATE.md)，附变更说明、测试输出；新示例请带 JSON。Bug / 新功能 / 使用疑问走 [Issue 模板](.github/ISSUE_TEMPLATE/)。
 
 三套实现方案的对比见 [`DESIGN.md`](DESIGN.md)。
 

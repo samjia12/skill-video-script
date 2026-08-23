@@ -1,0 +1,82 @@
+name: Bug report
+description: Crash, wrong output, or docs that do not match the code. 报告崩溃、错误输出或文档与实现不符。
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Search [existing issues](https://github.com/samjia12/skill-video-script/issues) first.
+        提交前请先搜索是否已有相同问题。
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary / 问题摘要
+      description: What went wrong in one or two sentences.
+      placeholder: generate() dropped the CTA shot on WeChat Channels when duration_sec was 20.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce / 复现步骤
+      description: Exact command or library call. Paste the product JSON if you can (no API keys).
+      render: bash
+      placeholder: |
+        python3 scripts/generate_script.py examples/wechat_coffee.json --format json
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual / 期望与实际
+      description: What you expected, and what you got (stderr, exit code, excerpt of Markdown/JSON).
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform / 平台
+      options:
+        - douyin (抖音)
+        - wechat (视频号)
+        - bilibili (B站)
+        - CLI / library (not platform-specific)
+        - documentation
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: Backend
+      options:
+        - template (default)
+        - llm
+        - unknown
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: "3.9.6"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 14 / Ubuntu 22.04 / Windows 11
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I ran `python3 -m pytest tests` (or I cannot run tests and explained why).
+          required: false
+        - label: I did not paste `VIDEO_SCRIPT_API_KEY` or other secrets.
+          required: true
+        - label: I searched existing issues.
+          required: true

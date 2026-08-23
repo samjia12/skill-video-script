@@ -5,7 +5,9 @@ All notable changes to this project are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-08-23
+## [0.1.0] - 2026-08-23
+
+First public release.
 
 ### Added
 
@@ -17,9 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Markdown and JSON renderers, atomic file output, and permission-aware IO.
 - Unit tests for every core function plus eight boundary classes (empty, oversized, illegal format, network, rate limit, concurrency, special characters, access denied).
 - Bilingual README, MIT license, and three runnable examples.
+- Marketer intro posts (`docs/blog/`) and GitHub issue / pull request templates.
 
 ### Security
 
 - Input sanitization strips NUL, bidi overrides, and zero-width characters.
 - Markdown rendering escapes user-supplied names so they cannot break the document.
 - LLM mode never runs unless an API key is present; credentials are read from the environment, not from the brief JSON.
+
+[0.1.0]: https://github.com/samjia12/skill-video-script/releases/tag/v0.1.0

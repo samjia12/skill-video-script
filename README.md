@@ -7,7 +7,10 @@ This repository is both:
 - an **Agent Skill** (`SKILL.md`) that coding agents can load, and
 - a **standalone Python CLI / library** that runs offline with the standard library.
 
-[中文文档](README.zh-CN.md)
+[中文文档](README.zh-CN.md) ·
+[营销介绍博文](docs/blog/intro-for-marketers.zh-CN.md) ·
+[Intro for marketers](docs/blog/intro-for-marketers.md) ·
+[Release notes v0.1.0](docs/releases/v0.1.0.md)
 
 ## Features
 
@@ -59,9 +62,10 @@ python3 scripts/generate_script.py examples/wechat_coffee.json -o output/coffee.
 python3 scripts/generate_script.py examples/bilibili_keyboard.json --format json
 ```
 
-Library:
+Library (`PYTHONPATH=src` is required unless you `pip install -e .`):
 
-```python
+```bash
+PYTHONPATH=src python3 - <<'PY'
 from video_script import generate, parse_brief, render_markdown
 
 brief = parse_brief({
@@ -70,7 +74,10 @@ brief = parse_brief({
     "selling_points": ["清爽不黏腻", "SPF50+"],
 })
 print(render_markdown(generate(brief)))
+PY
 ```
+
+`scripts/generate_script.py` and the files in `examples/` already put `src/` on `sys.path`.
 
 ## Examples
 
@@ -89,6 +96,7 @@ The files under `examples/` are runnable as-is from the repo root.
   "audience": "通勤学生和上班族",
   "price": "79元",
   "brand": "晴川",
+  "description": "出门前30秒涂完，通勤也不花脸。",
   "duration_sec": 27
 }
 ```
@@ -200,7 +208,7 @@ CLI flags:
 | Flag | Description |
 | --- | --- |
 | `--name` / `--platform` / `--points` | Brief without a JSON file |
-| `--audience` `--category` `--price` `--brand` `--description` `--duration` | Optional brief fields |
+| `--audience` `--category` `--price` `--brand` `--description` `--duration` `--language` | Optional brief fields (`--language` is stored; VO stays Chinese) |
 | `--backend template\|llm` | Default `template` (offline) |
 | `--format md\|json\|both` | Default `md` |
 | `-o` / `--output` | Write a file (parents created) |
@@ -220,13 +228,16 @@ No. The default engine is a deterministic template/strategy generator. `--backen
 Douyin, WeChat Channels, and Bilibili are Chinese-language feeds. Section titles in the Markdown output stay in Chinese so creators can paste them into an editor.
 
 **Can I add TikTok / YouTube Shorts / Instagram Reels?**
-Not in 1.0.0. Those products have different music licensing and CTA surfaces. Open an issue or extend `platforms.py` + `copy_bank.py`.
+Not in 0.1.0. Those products have different music licensing and CTA surfaces. The `tiktok` alias currently maps to the Douyin playbook. Open an issue or extend `platforms.py` + `copy_bank.py`.
 
 **Will this recommend a copyrighted song?**
 No. BGM output is mood, BPM, genre, and **library search keywords**.
 
 **The hook line looks truncated.**
-The engine caps spoken characters to the platform speaking rate so the host can actually fit the line into 3 seconds. Prefer a shorter product name, or raise `--duration` so later shots carry the rest of the pitch.
+The engine prefers a **complete short sentence** that fits the ~3-second speaking budget. A long product name may show up in later shots rather than in the opening.
+
+**Does `--language en` switch the voiceover to English?**
+No. It is stored on the brief. Spoken copy stays Chinese because Douyin / Channels / Bilibili are Chinese-language feeds. English VO is on the [0.1.0 roadmap](docs/releases/v0.1.0.md).
 
 **How do I use this as an agent skill?**
 Point the agent at `SKILL.md`. The skill tells the agent to collect a brief, run `scripts/generate_script.py`, and present all three versions in a fixed order.
@@ -241,7 +252,7 @@ Point the agent at `SKILL.md`. The skill tells the agent to collect a brief, run
 3. Add or update a unit test next to the behavior you change (`tests/`).
 4. Run `python3 -m pytest tests`.
 5. Do not commit API keys. Do not add pirated music titles to `copy_bank.py`.
-6. Open a PR with a summary, test output, and any new example JSON.
+6. Open a PR with the [pull request template](.github/PULL_REQUEST_TEMPLATE.md): summary, test output, and any new example JSON. Bugs / features / how-to questions use the [issue templates](.github/ISSUE_TEMPLATE/).
 
 Design notes for the original three implementation options live in [`DESIGN.md`](DESIGN.md).
 

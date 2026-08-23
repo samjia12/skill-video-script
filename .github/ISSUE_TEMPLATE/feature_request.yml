@@ -1,0 +1,61 @@
+name: Feature request
+description: Propose a new platform, style, export, or CLI flag. 建议新平台、新风格、导出或命令行能力。
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the job this feature would do for a marketer or creator.
+        请说明这个能力帮谁解决什么问题。Roadmap items already listed in
+        [v0.1.0 notes](https://github.com/samjia12/skill-video-script/blob/main/docs/releases/v0.1.0.md)
+        still need a vote — comment there or open this form with extra detail.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / 要解决的问题
+      description: What is painful today without this feature.
+      placeholder: I need an English voiceover when the same product also ships on TikTok US.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal / 建议方案
+      description: What you want the tool to do. API shape, flag names, or sample output welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area / 范围
+      options:
+        - New platform playbook
+        - New script style
+        - CLI / IO
+        - LLM backend
+        - Documentation / Skill
+        - Export format
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime constraint
+      description: This project keeps the default engine on the Python standard library.
+      options:
+        - Fits stdlib-only runtime
+        - Would need a new dependency (please justify)
+        - Unsure
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I am willing to help implement this (optional).
+          required: false
+        - label: I searched existing issues and the v0.1.0 roadmap.
+          required: true

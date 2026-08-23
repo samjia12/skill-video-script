@@ -1,0 +1,51 @@
+name: Usage question
+description: How do I run this, fill a brief, or load the Skill? 安装、brief 字段、Skill 加载等使用问题。
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For crashes or wrong output, use **Bug report**.
+        崩溃或结果明显错误请走 Bug 报告。
+        Docs: [README](https://github.com/samjia12/skill-video-script#readme) ·
+        [中文](https://github.com/samjia12/skill-video-script/blob/main/README.zh-CN.md) ·
+        [SKILL.md](https://github.com/samjia12/skill-video-script/blob/main/SKILL.md)
+  - type: textarea
+    id: question
+    attributes:
+      label: Question / 问题
+      description: What are you trying to do, and where did the docs fall short.
+    validations:
+      required: true
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic / 主题
+      options:
+        - Install / pytest
+        - CLI flags or JSON brief
+        - Library import (PYTHONPATH)
+        - Agent Skill (SKILL.md)
+        - LLM backend
+        - Platform aliases (抖音 / 视频号 / B站)
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What you already tried / 已尝试
+      description: Commands, error text, or the brief JSON (no secrets).
+      render: bash
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I read the README FAQ and at least one file in examples/.
+          required: true
+        - label: I did not paste API keys.
+          required: true

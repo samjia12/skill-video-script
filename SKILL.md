@@ -36,7 +36,7 @@ If a required field is missing, ask once. Do not guess platform.
 From the skill root (works without installing the package):
 
 ```bash
-python scripts/generate_script.py \
+python3 scripts/generate_script.py \
   --name "清润防晒霜" \
   --platform douyin \
   --points "清爽不黏腻,SPF50+,学生党价格" \
@@ -49,7 +49,7 @@ python scripts/generate_script.py \
 JSON file:
 
 ```bash
-python scripts/generate_script.py examples/douyin_skincare.json -o output/script.md
+python3 scripts/generate_script.py examples/douyin_skincare.json -o output/script.md
 ```
 
 Default engine is the offline template strategy. Only pass `--backend llm` when the user explicitly wants an LLM rewrite **and** `VIDEO_SCRIPT_API_KEY` is set. On LLM failure, report the error; do not silently ship an empty script.

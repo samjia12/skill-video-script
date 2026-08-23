@@ -1,0 +1,11 @@
+{
+  "name": "便携胶囊咖啡机",
+  "platform": "wechat",
+  "category": "小家电",
+  "selling_points": ["30秒出杯", "占地只有一本杂志", "胶囊兼容多口味"],
+  "audience": "租房党和远程办公的人",
+  "price": "299元",
+  "brand": "小暖",
+  "description": "不想再喝隔夜美式，也不想为咖啡机腾出半张桌子。",
+  "duration_sec": 36
+}
